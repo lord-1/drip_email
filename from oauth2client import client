@@ -1,0 +1,17 @@
+from oauth2client import client
+from apiclient import discovery
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import base64
+
+
+creds = client.OAuth2Credentials.from_json(item.credentials)
+http = creds.authorize(httplib2.Http())
+service = discovery.build('gmail', 'v1', http=http)
+msg = MIMEMultipart('alternative')
+msg['subject'] = 'Successfully messsaged'
+msg['from'] = 'sandeep.hukku93@gmail.com'
+msg['From'] = 'sandeep.hukku93@gmail.com'
+msg['To'] = 'sandeep.hukku@happay.in'
+d = {'raw': base64.urlsafe_b64encode(msg.as_string())}
+message = service.users().messages().send(userId="me", body=d).execute()
