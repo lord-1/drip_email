@@ -20,6 +20,7 @@ def build_service(user):
 	service = discovery.build('gmail', 'v1', http=http)
 	return service
 
+
 def create_message(data_dict):
 	msg = MIMEMultipart('alternative')
 	msg['subject'] = 'Successfully messsaged'
@@ -28,12 +29,14 @@ def create_message(data_dict):
 	msg['To'] = 'sandeep.hukku@happay.in'
 	return {'raw': base64.urlsafe_b64encode(msg.as_string())}
 
+
 def send_message(user, raw_data):
 	service = build_service(user)
 	try:
 		service.users().messages().send(userId="me", body=raw_data).execute()
 	except Exception as e:
 		print 'Failed to mail'
+
 
 def schedule_mails(item_data):
 	import pdb
@@ -126,3 +129,32 @@ def create_campaign(data_dict, user):
 		return CAMPAIGN_SAVE_SUCCESS
 	except Exception as e:
 		return CAMPAIGN_SAVE_FAILURE
+
+
+def validate_users(user_li):
+	valid_users, invalid_users = [], []
+	for item in user_li:
+		try:
+			user = Reciever.query.get(int(item))
+			valid_users.append(item)
+		except Exception as e:
+			invalid_users.append(item)
+		return valid_users, invalid_users
+
+def validate_campaign(campaign_id):
+	if not campaign_id:
+		return False, 'Invalid campaign Id', None
+	try:
+		campaign_id = int(campaign_id)
+	except Exception as e:
+		return False, 'Invalid camapaign Id', None
+	try:
+		campaign = Campaign.query.get(campaign_id)
+		return True, None, campaign
+	except Exception as e:
+		return False, 'Unknonwn Campaign Id', None
+
+
+
+
+

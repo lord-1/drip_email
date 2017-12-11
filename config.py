@@ -18,5 +18,7 @@ def register_views(app):
 	
 	from campaign.views import campaign_app
 	from user.views import user_app
+	from reciever.views import reciever_app
 	app.register_blueprint(campaign_app, url_prefix='/camp')
 	app.register_blueprint(user_app, url_prefix='/user')
+	app.register_blueprint(reciever_app, url_prefix='/rec')
